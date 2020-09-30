@@ -15,6 +15,10 @@ public class ContactCreationTests {
   public void setUp() throws Exception {
     wd = new FirefoxDriver();
     wd.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+    login();
+  }
+
+  private void login() {
     wd.get("http://localhost/addressbook/");
     wd.findElement(By.name("user")).click();
     wd.findElement(By.name("user")).clear();
@@ -27,7 +31,21 @@ public class ContactCreationTests {
 
   @Test
   public void testContactCreation() throws Exception {
-    wd.findElement(By.xpath(".//a[.='add new']")).click();
+    goToCreateContactPage();
+    fillContactForm();
+    submitContactCreation();
+    returnToGroupPage();
+  }
+
+  private void returnToGroupPage() {
+    wd.findElement(By.linkText("home page")).click();
+  }
+
+  private void submitContactCreation() {
+    wd.findElement(By.xpath("(//input[@name='submit'])[2]")).click();
+  }
+
+  private void fillContactForm() {
     wd.findElement(By.name("firstname")).clear();
     wd.findElement(By.name("firstname")).sendKeys("Batman");
     wd.findElement(By.name("lastname")).clear();
@@ -36,13 +54,19 @@ public class ContactCreationTests {
     wd.findElement(By.name("mobile")).sendKeys("99025522208");
     wd.findElement(By.name("email")).clear();
     wd.findElement(By.name("email")).sendKeys("batman@test.com");
-    wd.findElement(By.xpath("(//input[@name='submit'])[2]")).click();
-    wd.findElement(By.linkText("home page")).click();
+  }
+
+  private void goToCreateContactPage() {
+    wd.findElement(By.xpath(".//a[.='add new']")).click();
+  }
+
+  private void logout() {
     wd.findElement(By.linkText("Logout")).click();
   }
 
   @AfterMethod(alwaysRun = true)
   public void tearDown() throws Exception {
+    logout();
     wd.quit();
   }
 
