@@ -21,10 +21,6 @@ public class ContactHelper extends HelperBase {
     type(By.name("email"), contactData.getEmail());
   }
 
-  public void goToCreateContactPage() {
-    click(By.xpath(".//a[.='add new']"));
-  }
-
   public void returnToHomePage() {
     click(By.linkText("home page"));
   }
