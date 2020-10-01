@@ -25,6 +25,18 @@ public class HelperBase {
     wd.get(url);
   }
 
+  public void submitModification() {
+    click(By.name("update"));
+  }
+
+  public void selectItem() {
+    click(By.name("selected[]"));
+  }
+
+  public void acceptAlert() {
+    wd.switchTo().alert().accept();
+  }
+
   private boolean isElementPresent(By by) {
     try {
       wd.findElement(by);
