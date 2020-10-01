@@ -24,4 +24,12 @@ public class ContactHelper extends HelperBase {
   public void returnToHomePage() {
     click(By.linkText("home page"));
   }
+
+  public void editContact() {
+    click(By.xpath("//img[@alt='Edit']"));
+  }
+
+  public void deleteSelectedContacts() {
+    click(By.xpath(".//input[@value ='Delete']"));
+  }
 }
