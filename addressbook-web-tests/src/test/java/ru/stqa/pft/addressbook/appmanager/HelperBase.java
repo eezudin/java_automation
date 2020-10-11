@@ -59,4 +59,8 @@ public class HelperBase {
       return false;
     }
   }
+
+  protected boolean isItemExist() {
+    return isElementPresent(By.name("selected[]"));
+  }
 }
