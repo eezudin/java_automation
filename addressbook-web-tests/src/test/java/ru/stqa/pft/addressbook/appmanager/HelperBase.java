@@ -34,8 +34,8 @@ public class HelperBase {
     click(By.name("update"));
   }
 
-  public void selectItem() {
-    click(By.name("selected[]"));
+  public void selectItem(int index) {
+    wd.findElements(By.name("selected[]")).get(index).click();
   }
 
   public void acceptAlert() {
