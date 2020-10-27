@@ -7,9 +7,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import ru.stqa.pft.addressbook.model.ContactData;
+import ru.stqa.pft.addressbook.model.Contacts;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ContactHelper extends HelperBase {
 
@@ -60,22 +62,42 @@ public class ContactHelper extends HelperBase {
     click(By.xpath(".//a[.='add new']"));
   }
 
-  public void createContact(ContactData contactData) {
+  public void create(ContactData contactData) {
     initContactCreation();
     fillContactForm(contactData, true);
     submitContactCreation();
     returnToHomePage();
   }
 
-  public List<ContactData> getContactList() {
-    List<ContactData> contacts = new ArrayList<>();
+  public void modify(ContactData contact) {
+    editContactById(contact.getId());
+    fillContactForm(contact, false);
+    submitModification();
+    returnToHomePage();
+  }
+
+  public void delete(ContactData contact) {
+    selectContactById(contact.getId());
+    deleteSelectedContacts();
+    acceptAlert();
+  }
+
+  private void editContactById(int id) {
+    wd.findElement(By.xpath("//input[@value='" + id + "']/../following-sibling::td/a/img[@Title='Edit']")).click();
+  }
+
+  private void selectContactById(int id) {
+    wd.findElement(By.cssSelector("input[value='" + id + "']")).click();
+  }
+
+  public Contacts all() {
+    Contacts contacts = new Contacts();
     List<WebElement> rows = wd.findElements(By.cssSelector("tr[name = entry]"));
     for (WebElement row : rows) {
       int id = Integer.parseInt(row.findElement(By.tagName("input")).getAttribute("value"));
       List<WebElement> cells = row.findElements(By.tagName("td"));
-      contacts.add(new ContactData(id, cells.get(1).getText(), cells.get(2).getText(), null, null, null));
+      contacts.add(new ContactData().withId(id).withFirstName(cells.get(1).getText()).withLastName(cells.get(2).getText()));
     }
-
     return contacts;
   }
 }
