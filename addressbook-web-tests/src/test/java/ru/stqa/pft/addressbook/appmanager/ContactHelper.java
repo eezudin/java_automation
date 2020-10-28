@@ -8,11 +8,8 @@ import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
-import ru.stqa.pft.addressbook.model.Groups;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class ContactHelper extends HelperBase {
 
@@ -108,5 +105,9 @@ public class ContactHelper extends HelperBase {
       cashedContacts.add(new ContactData().withId(id).withFirstName(cells.get(1).getText()).withLastName(cells.get(2).getText()));
     }
     return new Contacts(cashedContacts);
+  }
+
+  public int count() {
+    return wd.findElements(By.name("selected[]")).size();
   }
 }
