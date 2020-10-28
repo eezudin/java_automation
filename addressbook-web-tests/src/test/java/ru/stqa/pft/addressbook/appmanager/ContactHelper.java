@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
+import ru.stqa.pft.addressbook.model.Groups;
 
 import java.util.HashSet;
 import java.util.List;
@@ -66,6 +67,7 @@ public class ContactHelper extends HelperBase {
     initContactCreation();
     fillContactForm(contactData, true);
     submitContactCreation();
+    cashedContacts = null;
     returnToHomePage();
   }
 
@@ -73,6 +75,7 @@ public class ContactHelper extends HelperBase {
     editContactById(contact.getId());
     fillContactForm(contact, false);
     submitModification();
+    cashedContacts = null;
     returnToHomePage();
   }
 
@@ -80,6 +83,7 @@ public class ContactHelper extends HelperBase {
     selectContactById(contact.getId());
     deleteSelectedContacts();
     acceptAlert();
+    cashedContacts = null;
   }
 
   private void editContactById(int id) {
@@ -90,14 +94,19 @@ public class ContactHelper extends HelperBase {
     wd.findElement(By.cssSelector("input[value='" + id + "']")).click();
   }
 
+  private Contacts cashedContacts = null;
+
   public Contacts all() {
-    Contacts contacts = new Contacts();
+    if (cashedContacts != null) {
+      return new Contacts(cashedContacts);
+    }
+    Contacts cashedContacts = new Contacts();
     List<WebElement> rows = wd.findElements(By.cssSelector("tr[name = entry]"));
     for (WebElement row : rows) {
       int id = Integer.parseInt(row.findElement(By.tagName("input")).getAttribute("value"));
       List<WebElement> cells = row.findElements(By.tagName("td"));
-      contacts.add(new ContactData().withId(id).withFirstName(cells.get(1).getText()).withLastName(cells.get(2).getText()));
+      cashedContacts.add(new ContactData().withId(id).withFirstName(cells.get(1).getText()).withLastName(cells.get(2).getText()));
     }
-    return contacts;
+    return new Contacts(cashedContacts);
   }
 }
