@@ -17,7 +17,7 @@ public class ContactModificationTests extends TestBase {
       app.contact().create(
               new ContactData().withFirstName("Batman").withLastName("Batman")
                       .withMobilePhone("99025522208").withHomePhone("21348").withWorkPhone("54218465")
-                      .withEmail("batman@test.com").withGroup("test1"));
+                      .withEmail("batman@test.com").withEmail3("btmn@test.com").withGroup("test1").withAddress("Gotham"));
     }
   }
 
@@ -26,7 +26,8 @@ public class ContactModificationTests extends TestBase {
     Contacts before = app.contact().all();
     ContactData modifiedContact = before.iterator().next();
     ContactData contact = new ContactData().withId(modifiedContact.getId()).withFirstName("Batman").withLastName("Batman")
-            .withMobilePhone("99025522208").withHomePhone("35453").withWorkPhone("456345123").withEmail("batman@test.com");
+            .withMobilePhone("99025522208").withHomePhone("35453").withWorkPhone("456345123").withEmail("batman@test.com")
+            .withEmail2("batman@test.com").withAddress("Gotham");
     app.contact().modify(contact);
     assertThat(app.contact().count(), equalTo(before.size()));
     Contacts after = app.contact().all();
