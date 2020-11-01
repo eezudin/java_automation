@@ -9,4 +9,6 @@ dependencies {
     compile 'org.seleniumhq.selenium:selenium-java:4.0.0-alpha-6'
     compile 'org.hamcrest:hamcrest:2.2'
     compile 'com.beust:jcommander:1.78'
+    compile 'com.thoughtworks.xstream:xstream:1.4.10'
+    compile 'com.google.code.gson:gson:2.8.6'
 }
