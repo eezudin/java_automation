@@ -112,7 +112,7 @@ public class ContactHelper extends HelperBase {
       String allPhones = cells.get(5).getText();
       String allEmails = cells.get(4).getText();
       String address = cells.get(3).getText();
-      cashedContacts.add(new ContactData().withId(id).withFirstName(cells.get(1).getText()).withLastName(cells.get(2).
+      cashedContacts.add(new ContactData().withId(id).withFirstName(cells.get(2).getText()).withLastName(cells.get(1).
               getText()).withAllPhones(allPhones).withAllEmails(allEmails).withAddress(address));
     }
     return new Contacts(cashedContacts);

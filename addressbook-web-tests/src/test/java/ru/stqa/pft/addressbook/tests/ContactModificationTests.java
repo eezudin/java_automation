@@ -1,14 +1,66 @@
 package ru.stqa.pft.addressbook.tests;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ContactModificationTests extends TestBase {
+
+  @DataProvider
+  public Iterator<Object[]> validContactsFromJson() throws IOException {
+    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/contacts.json")));
+    String json = "";
+    String line = reader.readLine();
+    while (line != null) {
+      json += line;
+      line = reader.readLine();
+    }
+
+    GsonBuilder gsonBuilder = new GsonBuilder();
+
+    JsonDeserializer<ContactData> deserializer = (json1, typeOfT, context) -> {
+      JsonObject jsonObject = json1.getAsJsonObject();
+
+      File file = new File(
+              jsonObject.get("photo").getAsString()
+      );
+
+      return new ContactData()
+              .withFirstName(jsonObject.get("firstName").getAsString())
+              .withLastName(jsonObject.get("lastName").getAsString())
+              .withMobilePhone(jsonObject.get("mobilePhone").getAsString())
+              .withHomePhone(jsonObject.get("homePhone").getAsString())
+              .withWorkPhone(jsonObject.get("workPhone").getAsString())
+              .withEmail(jsonObject.get("email").getAsString())
+              .withEmail3(jsonObject.get("email3").getAsString())
+              .withGroup(jsonObject.get("group").getAsString())
+              .withAddress(jsonObject.get("address").getAsString())
+              .withPhoto(file);
+    };
+    gsonBuilder.registerTypeAdapter(ContactData.class, deserializer);
+    Gson gson = gsonBuilder.create();
+
+    List<ContactData> contacts = gson.fromJson(json, new TypeToken<List<ContactData>>(){}.getType()); // List<ContactData>.class
+    return contacts.stream().map((c) -> new Object[] {c}).collect(Collectors.toList()).iterator();
+  }
 
   @BeforeMethod
   public static void runPreconditions() {
@@ -21,14 +73,11 @@ public class ContactModificationTests extends TestBase {
     }
   }
 
-  @Test
-  public void testContactModification() {
+  @Test(dataProvider = "validContactsFromJson")
+  public void testContactModification(ContactData contact) {
     Contacts before = app.contact().all();
     ContactData modifiedContact = before.iterator().next();
-    ContactData contact = new ContactData().withId(modifiedContact.getId()).withFirstName("Batman").withLastName("Batman")
-            .withMobilePhone("99025522208").withHomePhone("35453").withWorkPhone("456345123").withEmail("batman@test.com")
-            .withEmail2("batman@test.com").withAddress("Gotham");
-    app.contact().modify(contact);
+    app.contact().modify(contact.withId(modifiedContact.getId()));
     assertThat(app.contact().count(), equalTo(before.size()));
     Contacts after = app.contact().all();
     assertThat(after.size(), equalTo(before.size()));

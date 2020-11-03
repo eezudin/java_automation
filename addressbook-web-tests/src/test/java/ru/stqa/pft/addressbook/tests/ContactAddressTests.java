@@ -19,7 +19,7 @@ public class ContactAddressTests extends TestBase {
     }
   }
 
-  @Test
+  @Test(invocationCount = 3)
   public void testContactAddress() {
     app.goTo().homePage();
     ContactData contact = app.contact().all().iterator().next();
