@@ -61,30 +61,30 @@ public class ContactDataGenerator {
     gsonBuilder.registerTypeAdapter(File.class, serializer);
     Gson gson = gsonBuilder.setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
     String json = gson.toJson(contacts);
-    Writer writer = new FileWriter(file);
-    writer.write(json);
-    writer.close();
+    try (Writer writer = new FileWriter(file)) {
+      writer.write(json);
+    }
   }
 
   private void saveAsXml(List<ContactData> contacts, File file) throws IOException {
     XStream xstream = new XStream();
     xstream.processAnnotations(ContactData.class);
     String xml = xstream.toXML(contacts);
-    Writer writer = new FileWriter(file);
-    writer.write(xml);
-    writer.close();
+    try (Writer writer = new FileWriter(file)) {
+      writer.write(xml);
+    }
   }
 
   private void saveAsCsv(List<ContactData> contacts, File file) throws IOException {
     System.out.println(new File(".").getAbsolutePath());
-    Writer writer = new FileWriter(file);
-    for(ContactData contact : contacts) {
-      writer.write(String.format("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n", contact.getFirstName(), contact.getLastName(),
-              contact.getMobilePhone(), contact.getHomePhone(), contact.getWorkPhone(),
-              contact.getEmail(), contact.getEmail3(), contact.getGroup(), contact.getAddress(),
-              contact.getPhoto()));
+    try (Writer writer = new FileWriter(file)) {
+      for (ContactData contact : contacts) {
+        writer.write(String.format("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n", contact.getFirstName(), contact.getLastName(),
+                contact.getMobilePhone(), contact.getHomePhone(), contact.getWorkPhone(),
+                contact.getEmail(), contact.getEmail3(), contact.getGroup(), contact.getAddress(),
+                contact.getPhoto()));
+      }
     }
-    writer.close();
   }
 
   private List<ContactData> generate(int count) {
@@ -99,14 +99,6 @@ public class ContactDataGenerator {
     }
     return contacts;
   }
-
-
-
-
-
-
-
-
 
 
 }

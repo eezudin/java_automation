@@ -26,40 +26,43 @@ public class ContactModificationTests extends TestBase {
 
   @DataProvider
   public Iterator<Object[]> validContactsFromJson() throws IOException {
-    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/contacts.json")));
-    String json = "";
-    String line = reader.readLine();
-    while (line != null) {
-      json += line;
-      line = reader.readLine();
+    try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/contacts.json")))) {
+
+      String json = "";
+      String line = reader.readLine();
+      while (line != null) {
+        json += line;
+        line = reader.readLine();
+      }
+
+      GsonBuilder gsonBuilder = new GsonBuilder();
+
+      JsonDeserializer<ContactData> deserializer = (json1, typeOfT, context) -> {
+        JsonObject jsonObject = json1.getAsJsonObject();
+
+        File file = new File(
+                jsonObject.get("photo").getAsString()
+        );
+
+        return new ContactData()
+                .withFirstName(jsonObject.get("firstName").getAsString())
+                .withLastName(jsonObject.get("lastName").getAsString())
+                .withMobilePhone(jsonObject.get("mobilePhone").getAsString())
+                .withHomePhone(jsonObject.get("homePhone").getAsString())
+                .withWorkPhone(jsonObject.get("workPhone").getAsString())
+                .withEmail(jsonObject.get("email").getAsString())
+                .withEmail3(jsonObject.get("email3").getAsString())
+                .withGroup(jsonObject.get("group").getAsString())
+                .withAddress(jsonObject.get("address").getAsString())
+                .withPhoto(file);
+      };
+      gsonBuilder.registerTypeAdapter(ContactData.class, deserializer);
+      Gson gson = gsonBuilder.create();
+
+      List<ContactData> contacts = gson.fromJson(json, new TypeToken<List<ContactData>>() {
+      }.getType()); // List<ContactData>.class
+      return contacts.stream().map((c) -> new Object[]{c}).collect(Collectors.toList()).iterator();
     }
-
-    GsonBuilder gsonBuilder = new GsonBuilder();
-
-    JsonDeserializer<ContactData> deserializer = (json1, typeOfT, context) -> {
-      JsonObject jsonObject = json1.getAsJsonObject();
-
-      File file = new File(
-              jsonObject.get("photo").getAsString()
-      );
-
-      return new ContactData()
-              .withFirstName(jsonObject.get("firstName").getAsString())
-              .withLastName(jsonObject.get("lastName").getAsString())
-              .withMobilePhone(jsonObject.get("mobilePhone").getAsString())
-              .withHomePhone(jsonObject.get("homePhone").getAsString())
-              .withWorkPhone(jsonObject.get("workPhone").getAsString())
-              .withEmail(jsonObject.get("email").getAsString())
-              .withEmail3(jsonObject.get("email3").getAsString())
-              .withGroup(jsonObject.get("group").getAsString())
-              .withAddress(jsonObject.get("address").getAsString())
-              .withPhoto(file);
-    };
-    gsonBuilder.registerTypeAdapter(ContactData.class, deserializer);
-    Gson gson = gsonBuilder.create();
-
-    List<ContactData> contacts = gson.fromJson(json, new TypeToken<List<ContactData>>(){}.getType()); // List<ContactData>.class
-    return contacts.stream().map((c) -> new Object[] {c}).collect(Collectors.toList()).iterator();
   }
 
   @BeforeMethod
