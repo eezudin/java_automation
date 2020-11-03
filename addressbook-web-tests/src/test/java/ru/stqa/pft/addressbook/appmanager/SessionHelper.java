@@ -10,7 +10,6 @@ public class SessionHelper extends HelperBase {
   }
 
   protected void login(String username, String password) {
-    visit("http://localhost/addressbook/");
     type(By.name("user"), username);
     type(By.name("pass"), password);
     click(By.xpath("//input[@value='Login']"));
