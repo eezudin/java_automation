@@ -1,0 +1,38 @@
+[
+  {
+    "firstName": "test_first_name_0",
+    "lastName": "test_last_name_0",
+    "mobilePhone": "99025522208",
+    "homePhone": "546546546",
+    "workPhone": "31231314564",
+    "email": "batman@test.com",
+    "email3": "batman@3.com",
+    "group": "test1",
+    "address": "Gotham",
+    "photo": "src\\test\\resources\\pic.jpg"
+  },
+  {
+    "firstName": "test_first_name_1",
+    "lastName": "test_last_name_1",
+    "mobilePhone": "99025522208",
+    "homePhone": "546546546",
+    "workPhone": "31231314564",
+    "email": "batman@test.com",
+    "email3": "batman@3.com",
+    "group": "test1",
+    "address": "Gotham",
+    "photo": "src\\test\\resources\\pic.jpg"
+  },
+  {
+    "firstName": "test_first_name_2",
+    "lastName": "test_last_name_2",
+    "mobilePhone": "99025522208",
+    "homePhone": "546546546",
+    "workPhone": "31231314564",
+    "email": "batman@test.com",
+    "email3": "batman@3.com",
+    "group": "test1",
+    "address": "Gotham",
+    "photo": "src\\test\\resources\\pic.jpg"
+  }
+]
