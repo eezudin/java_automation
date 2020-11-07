@@ -209,6 +209,16 @@ public class ContactData {
             "id=" + id +
             ", firstName='" + firstName + '\'' +
             ", lastName='" + lastName + '\'' +
+            ", mobilePhone='" + mobilePhone + '\'' +
+            ", homePhone='" + homePhone + '\'' +
+            ", workPhone='" + workPhone + '\'' +
+            ", email='" + email + '\'' +
+            ", email2='" + email2 + '\'' +
+            ", email3='" + email3 + '\'' +
+            ", group='" + group + '\'' +
+            ", allPhones='" + allPhones + '\'' +
+            ", allEmails='" + allEmails + '\'' +
+            ", address='" + address + '\'' +
             '}';
   }
 
@@ -219,12 +229,17 @@ public class ContactData {
     ContactData that = (ContactData) o;
     return id == that.id &&
             Objects.equals(firstName, that.firstName) &&
-            Objects.equals(lastName, that.lastName);
+            Objects.equals(lastName, that.lastName) &&
+            Objects.equals(mobilePhone, that.mobilePhone) &&
+            Objects.equals(homePhone, that.homePhone) &&
+            Objects.equals(workPhone, that.workPhone) &&
+            Objects.equals(email, that.email) &&
+            Objects.equals(email3, that.email3) &&
+            Objects.equals(address, that.address);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, firstName, lastName);
+    return Objects.hash(id, firstName, lastName, mobilePhone, homePhone, workPhone, email, email3, address);
   }
-
 }

@@ -68,7 +68,7 @@ public class ContactModificationTests extends TestBase {
   @BeforeMethod
   public static void runPreconditions() {
     app.goTo().homePage();
-    if (app.contact().all().size() == 0) {
+    if (app.db().contacts().size() == 0) {
       app.contact().create(
               new ContactData().withFirstName("Batman").withLastName("Batman")
                       .withMobilePhone("99025522208").withHomePhone("21348").withWorkPhone("54218465")
@@ -78,12 +78,11 @@ public class ContactModificationTests extends TestBase {
 
   @Test(dataProvider = "validContactsFromJson")
   public void testContactModification(ContactData contact) {
-    Contacts before = app.contact().all();
+    Contacts before = app.db().contacts();
     ContactData modifiedContact = before.iterator().next();
     app.contact().modify(contact.withId(modifiedContact.getId()));
     assertThat(app.contact().count(), equalTo(before.size()));
-    Contacts after = app.contact().all();
-    assertThat(after.size(), equalTo(before.size()));
+    Contacts after = app.db().contacts();
     assertThat(after, equalTo(before.withModified(contact)));
   }
 }
