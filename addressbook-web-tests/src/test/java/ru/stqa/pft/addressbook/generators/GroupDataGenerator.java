@@ -31,22 +31,27 @@ public class GroupDataGenerator {
     JCommander jc = new JCommander(generator);
     try {
       jc.parse(args);
-    } catch (ParameterException ex) {
+      generator.run();
+    } catch (ParameterException | NullPointerException ex) {
       jc.usage();
     }
-    generator.run();
   }
 
   private void run() throws IOException {
     List<GroupData> groups = generate(count);
-    if (format.equals("csv")) {
-      saveAsCsv(groups, new File(file));
-    } else if (format.equals("xml")) {
-      saveAsXml(groups, new File(file));
-    } else if (format.equals("json")) {
-      saveAsJson(groups, new File(file));
-    } else {
-      System.out.println("Unrecognized format " + format);
+    switch (format) {
+      case "csv":
+        saveAsCsv(groups, new File(file));
+        break;
+      case "xml":
+        saveAsXml(groups, new File(file));
+        break;
+      case "json":
+        saveAsJson(groups, new File(file));
+        break;
+      default:
+        System.out.println("Unrecognized format " + format);
+        break;
     }
 
   }

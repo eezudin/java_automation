@@ -30,10 +30,10 @@ public class ContactDataGenerator {
     JCommander jc = new JCommander(generator);
     try {
       jc.parse(args);
-    } catch (ParameterException ex) {
+      generator.run();
+    } catch (ParameterException | NullPointerException ex) {
       jc.usage();
     }
-    generator.run();
   }
 
   private void run() throws IOException {
