@@ -5,14 +5,15 @@ repositories {
 }
 
 dependencies {
-    compile 'org.testng:testng:7.0.0'
-    compile 'org.seleniumhq.selenium:selenium-java:4.0.0-alpha-6'
-    compile 'org.hamcrest:hamcrest:2.2'
-    compile 'com.beust:jcommander:1.78'
-    compile 'com.thoughtworks.xstream:xstream:1.4.10'
-    compile 'com.google.code.gson:gson:2.8.6'
-    implementation("ch.qos.logback:logback-classic:1.2.3")
+    implementation 'org.testng:testng:7.0.0'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.0.0-alpha-6'
+    implementation 'org.hamcrest:hamcrest:2.2'
+    implementation 'com.beust:jcommander:1.78'
+    implementation 'com.thoughtworks.xstream:xstream:1.4.10'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
     implementation 'mysql:mysql-connector-java:8.0.22'
+    implementation 'org.hibernate:hibernate-core:5.4.20.Final'
 }
 
 task testGroups(type: Test) {
