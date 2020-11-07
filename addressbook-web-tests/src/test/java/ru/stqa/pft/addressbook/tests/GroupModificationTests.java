@@ -46,11 +46,12 @@ public class GroupModificationTests extends TestBase {
 
   @Test(dataProvider = "validGroupsFromJson")
   public void testGroupModification(GroupData group) {
-    Groups before = app.db().groups();
-    GroupData modifiedGroup = before.iterator().next();
-    app.group().modify(group.withId(modifiedGroup.getId()));
-    assertThat(app.group().count(), equalTo(before.size()));
-    Groups after = app.db().groups();
-    assertThat(after, equalTo(before.withModified(group)));
+      Groups before = app.db().groups();
+      GroupData modifiedGroup = before.iterator().next();
+      app.group().modify(group.withId(modifiedGroup.getId()));
+      assertThat(app.group().count(), equalTo(before.size()));
+      Groups after = app.db().groups();
+      assertThat(after, equalTo(before.withModified(group)));
+      verifyGroupListInUI();
   }
 }

@@ -1,0 +1,4 @@
+-DverifyUI=true  ---  use for perform 'verifyGroupListInUI()' and 'verifyContactListInUI()' in tests
+
+Console command example:
+gradlew testContacts -PverifyUI=true
