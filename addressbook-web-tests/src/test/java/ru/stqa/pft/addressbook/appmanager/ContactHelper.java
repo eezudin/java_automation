@@ -1,7 +1,6 @@
 package ru.stqa.pft.addressbook.appmanager;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -33,14 +32,9 @@ public class ContactHelper extends HelperBase {
     type(By.name("address"), contactData.getAddress());
     type(By.name("photo"), contactData.getPhoto().getAbsolutePath());
 
-    if (creation) {
-      try {
-        new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroup());
-      } catch (NoSuchElementException e) {
-        System.out.println("No groups exist: " + e.getMessage());
-        e.printStackTrace();
-        System.out.println("Contact will be created without any group");
-      }
+    if (creation && contactData.getGroups().size() > 0) {
+      Assert.assertTrue(contactData.getGroups().size() == 1);
+      new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroups().iterator().next().getName());
     } else {
       Assert.assertFalse(isElementPresent(By.name("new_group")), "This select should not be present");
     }

@@ -10,6 +10,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
+import ru.stqa.pft.addressbook.model.GroupData;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -44,6 +45,11 @@ public class ContactModificationTests extends TestBase {
                 jsonObject.get("photo").getAsString()
         );
 
+        if (app.db().groups().size() == 0) {
+          app.goTo().groupPage();
+          app.group().create(new GroupData().withName("test1"));
+        }
+
         return new ContactData()
                 .withFirstName(jsonObject.get("firstName").getAsString())
                 .withLastName(jsonObject.get("lastName").getAsString())
@@ -52,7 +58,7 @@ public class ContactModificationTests extends TestBase {
                 .withWorkPhone(jsonObject.get("workPhone").getAsString())
                 .withEmail(jsonObject.get("email").getAsString())
                 .withEmail3(jsonObject.get("email3").getAsString())
-                .withGroup(jsonObject.get("group").getAsString())
+                .inGroup(app.db().groups().iterator().next())
                 .withAddress(jsonObject.get("address").getAsString())
                 .withPhoto(file);
       };
@@ -72,7 +78,10 @@ public class ContactModificationTests extends TestBase {
       app.contact().create(
               new ContactData().withFirstName("Batman").withLastName("Batman")
                       .withMobilePhone("99025522208").withHomePhone("21348").withWorkPhone("54218465")
-                      .withEmail("batman@test.com").withEmail3("btmn@test.com").withGroup("test1").withAddress("Gotham"));
+                      .withEmail("batman@test.com").withEmail3("btmn@test.com")
+                      .withPhoto(new File("src/test/resources/pic.jpg"))
+                      .inGroup(app.db().groups().iterator().next())
+                      .withAddress("Gotham"));
     }
   }
 

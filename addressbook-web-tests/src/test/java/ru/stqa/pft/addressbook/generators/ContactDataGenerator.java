@@ -6,6 +6,7 @@ import com.beust.jcommander.ParameterException;
 import com.google.gson.*;
 import com.thoughtworks.xstream.XStream;
 import ru.stqa.pft.addressbook.model.ContactData;
+import ru.stqa.pft.addressbook.model.Groups;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -79,9 +80,9 @@ public class ContactDataGenerator {
     System.out.println(new File(".").getAbsolutePath());
     try (Writer writer = new FileWriter(file)) {
       for (ContactData contact : contacts) {
-        writer.write(String.format("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n", contact.getFirstName(), contact.getLastName(),
+        writer.write(String.format("%s;%s;%s;%s;%s;%s;%s;%s;%s\n", contact.getFirstName(), contact.getLastName(),
                 contact.getMobilePhone(), contact.getHomePhone(), contact.getWorkPhone(),
-                contact.getEmail(), contact.getEmail3(), contact.getGroup(), contact.getAddress(),
+                contact.getEmail(), contact.getEmail3(), contact.getAddress(),
                 contact.getPhoto()));
       }
     }
@@ -94,7 +95,7 @@ public class ContactDataGenerator {
               .withFirstName(String.format("test_first_name_%s", i))
               .withLastName(String.format("test_last_name_%s", i))
               .withMobilePhone("99025522208").withHomePhone("546546546").withWorkPhone("31231314564")
-              .withEmail("batman@test.com").withEmail3("batman@3.com").withGroup("test1").withAddress("Gotham")
+              .withEmail("batman@test.com").withEmail3("batman@3.com").withAddress("Gotham")
               .withPhoto(new File("src/test/resources/pic.jpg")));
     }
     return contacts;

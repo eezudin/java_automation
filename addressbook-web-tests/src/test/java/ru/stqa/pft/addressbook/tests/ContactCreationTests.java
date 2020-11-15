@@ -2,10 +2,13 @@ package ru.stqa.pft.addressbook.tests;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
+import ru.stqa.pft.addressbook.model.GroupData;
+import ru.stqa.pft.addressbook.model.Groups;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,6 +40,11 @@ public class ContactCreationTests extends TestBase {
                 jsonObject.get("photo").getAsString()
         );
 
+        if (app.db().groups().size() == 0) {
+          app.goTo().groupPage();
+          app.group().create(new GroupData().withName("test1"));
+        }
+
         return new ContactData()
                 .withFirstName(jsonObject.get("firstName").getAsString())
                 .withLastName(jsonObject.get("lastName").getAsString())
@@ -45,7 +53,7 @@ public class ContactCreationTests extends TestBase {
                 .withWorkPhone(jsonObject.get("workPhone").getAsString())
                 .withEmail(jsonObject.get("email").getAsString())
                 .withEmail3(jsonObject.get("email3").getAsString())
-                .withGroup(jsonObject.get("group").getAsString())
+                .inGroup(app.db().groups().iterator().next())
                 .withAddress(jsonObject.get("address").getAsString())
                 .withPhoto(file);
       };
