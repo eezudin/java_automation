@@ -7,8 +7,13 @@ import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
+import ru.stqa.pft.addressbook.model.GroupData;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+
+import static ru.stqa.pft.addressbook.tests.TestBase.app;
 
 public class ContactHelper extends HelperBase {
 
@@ -77,18 +82,18 @@ public class ContactHelper extends HelperBase {
   }
 
   public void delete(ContactData contact) {
-    selectContactById(contact.getId());
+    markContactById(contact.getId());
     deleteSelectedContacts();
     acceptAlert();
     cashedContacts = null;
   }
 
   private void editContactById(int id) {
-   // wd.findElement(By.xpath("//input[@value='" + id + "']/../following-sibling::td/a/img[@Title='Edit']")).click();
+    // wd.findElement(By.xpath("//input[@value='" + id + "']/../following-sibling::td/a/img[@Title='Edit']")).click();
     wd.findElement(By.xpath(String.format("//input[@value='%s']/../following-sibling::td/a/img[@Title='Edit']", id))).click();
   }
 
-  private void selectContactById(int id) {
+  public void markContactById(int id) {
     wd.findElement(By.cssSelector("input[value='" + id + "']")).click();
   }
 
@@ -130,5 +135,53 @@ public class ContactHelper extends HelperBase {
     wd.navigate().back();
     return new ContactData().withFirstName(firstName).withLastName(lastName).withHomePhone(home).withMobilePhone(mobile)
             .withWorkPhone(work).withEmail(email).withEmail2(email2).withEmail3(email3).withAddress(address);
+  }
+
+  public String addToCorrectGroup(ContactData contact) {
+    String selectedGroup = null;
+    List<String> groupsNames = contact.getGroups().stream().map(GroupData::getName).collect(Collectors.toList());
+    List<String> options = new Select(wd.findElement(By.name("to_group"))).getOptions().stream().map(WebElement::getText)
+            .filter(o -> !groupsNames.contains(o)).collect(Collectors.toList());
+    try {
+      selectedGroup = options.iterator().next();
+      new Select(wd.findElement(By.name("to_group"))).selectByVisibleText(selectedGroup);
+    } catch (NoSuchElementException e) {
+      e.printStackTrace();
+      System.out.println("User is a member of all groups");
+      app.goTo().groupPage();
+      String groupName = "test_group_from_catch_" + Math.random() * 0xfffff * 1_000_000;
+      app.group().create(new GroupData().withName(groupName));
+      app.goTo().homePage();
+      markContactById(contact.getId());
+      new Select(wd.findElement(By.name("to_group"))).selectByVisibleText(groupName);
+      selectedGroup = groupName;
+    } finally {
+      wd.findElement(By.name("add")).click();
+      wd.findElement(By.cssSelector(".msgbox a")).click();
+    }
+    return selectedGroup;
+  }
+
+  public void addToAnyGroup(ContactData contact) {
+    String option = new Select(wd.findElement(By.name("to_group"))).getOptions().stream().iterator().next().getText();
+    new Select(wd.findElement(By.name("to_group"))).selectByVisibleText(option);
+    markContactById(contact.getId());
+    wd.findElement(By.name("add")).click();
+    wd.findElement(By.cssSelector(".msgbox a")).click();
+  }
+
+  public ContactData withAnyGroup() {
+    ContactData anyContact = app.db().contacts().stream().iterator().next();
+    ContactData contactWithGroup = null;
+    try {
+      contactWithGroup = app.db().contacts().stream().filter(c -> c.getGroups().size() > 0).iterator().next();
+    } catch (NoSuchElementException e) {
+      e.printStackTrace();
+      System.out.println("All users are not members of any group");
+      app.goTo().homePage();
+      addToAnyGroup(anyContact);
+      contactWithGroup = anyContact;
+    }
+    return contactWithGroup;
   }
 }
