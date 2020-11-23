@@ -14,6 +14,8 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HttpSession {
   private CloseableHttpClient httpClient;
@@ -34,8 +36,8 @@ public class HttpSession {
     post.setEntity(new UrlEncodedFormEntity(params));
     CloseableHttpResponse response = httpClient.execute(post);
     String body = geTextFrom(response);
-   // return body.contains(String.format("<span class=\"italic\">%s</span>", username));
-    return body.contains(String.format("<a href=\"/mantisbt-2.24.2/account_page.php\">%s</a>", username));
+    String pattern = String.format("a href=\"/mantisbt-2.24.2/account_page.php\">%s.*</a>", username);
+     return Pattern.compile(pattern).matcher(body).find();
   }
 
   private String geTextFrom(CloseableHttpResponse response) throws IOException {
