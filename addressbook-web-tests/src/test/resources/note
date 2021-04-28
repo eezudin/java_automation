@@ -1,4 +1,12 @@
 -DverifyUI=true  ---  use for perform 'verifyGroupListInUI()' and 'verifyContactListInUI()' in tests
 
-Console command example:
+Console command examples:
+
 gradlew testContacts -PverifyUI=true
+
+gradlew cleanTest testContacts -Pbrowser=firefox
+
+gradlew tests -Psuite=src/test/resources/testng-groups.xml -Pbrowser=firefox -Ptarget=local
+
+
+

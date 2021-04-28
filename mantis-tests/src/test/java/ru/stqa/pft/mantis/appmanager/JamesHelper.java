@@ -116,11 +116,11 @@ public class JamesHelper {
     write("quit");
   }
 
-  public List<MailMessage> waitForMail(String username, String password, long timeout) throws MessagingException {
+  public List<MailMessage> waitForMail(String username, String password, long timeout, int mailCount) throws MessagingException {
     long start = System.currentTimeMillis();
     while (System.currentTimeMillis() < start + timeout) {
       List<MailMessage> allMail = getAllMail(username, password);
-      if (allMail.size() > 0) {
+      if (allMail.size() >= mailCount) {
         return allMail;
       }
       try {

@@ -16,6 +16,17 @@ dependencies {
     implementation 'org.hibernate:hibernate-core:5.1.0.Final'
 }
 
+//task tests(type: Test) {
+//    useTestNG {
+//        suites "${suite}"
+//    }
+//    systemProperty 'browser', "${browser}"
+//    systemProperty 'target', "${target}"
+//    if (project.hasProperty('verifyUI')) {
+//        systemProperty 'verifyUI', "${verifyUI}"
+//    }
+//}
+
 task testGroups(type: Test) {
     useTestNG {
         suites 'src/test/resources/testng-groups.xml'
