@@ -35,6 +35,7 @@ public class RegistrationTests extends TestBase {
   }
 
   @Test // Don't forget to start James C:\Tools\james-2.3.1\bin>run.bat
+        // telnet localhost 4555, root, root
   public void testRegistrationJames() throws IOException, MessagingException {
     long now = System.currentTimeMillis();
     String email = String.format("user%s@localhost", now);

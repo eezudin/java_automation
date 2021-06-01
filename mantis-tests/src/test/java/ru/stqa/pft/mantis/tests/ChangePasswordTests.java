@@ -20,11 +20,15 @@ public class ChangePasswordTests extends TestBase {
     UserData user = app.db().users().stream().filter(x -> !x.getName().equals("administrator"))
             .collect(Collectors.toList()).iterator().next();
     String newPassword = "P@zzvv0rcl";
-    app.james().deleteUser(user.getName());
+
+    if (app.james().doesUserExist(user.getName())) {
+      app.james().deleteUser(user.getName());
+    }
     app.james().createUser(user.getName(), user.getPassword());
+    app.james().drainEmail(user.getName(), user.getPassword());
 
     app.changePasswd().start(user.getName());
-    List<MailMessage> mailMessages = app.james().waitForMail(user.getName(), user.getPassword(),  60000, 2);
+    List<MailMessage> mailMessages = app.james().waitForMail(user.getName(), user.getPassword(), 60000, 1);
     String confirmationLink = findConfirmationLink(mailMessages, user.getEmail());
     app.changePasswd().finish(confirmationLink, newPassword);
     assertTrue(app.newSession().login(user.getName(), newPassword));
