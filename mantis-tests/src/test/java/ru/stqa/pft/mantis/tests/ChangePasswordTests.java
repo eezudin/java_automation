@@ -6,6 +6,7 @@ import ru.stqa.pft.mantis.model.MailMessage;
 import ru.stqa.pft.mantis.model.UserData;
 
 import javax.mail.MessagingException;
+import javax.xml.rpc.ServiceException;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +17,8 @@ public class ChangePasswordTests extends TestBase {
 
 
   @Test
-  public void testChangePassword() throws IOException, MessagingException {
+  public void testChangePassword() throws IOException, MessagingException, ServiceException {
+    skipIfNotFixed(2);
     UserData user = app.db().users().stream().filter(x -> !x.getName().equals("administrator"))
             .collect(Collectors.toList()).iterator().next();
     String newPassword = "P@zzvv0rcl";
