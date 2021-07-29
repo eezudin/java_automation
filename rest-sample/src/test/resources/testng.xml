@@ -4,6 +4,7 @@
     <test name="tests" >
         <classes>
             <class name="ru.stqa.pft.rest.RestTests"/>
+            <class name="ru.stqa.pft.rest.RestAssuredTests"/>
         </classes>
     </test>
 </suite>
